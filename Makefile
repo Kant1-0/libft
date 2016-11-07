@@ -5,27 +5,30 @@
 #                                                     +:+ +:+         +:+      #
 #    By: qfremeau <qfremeau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2015/11/24 11:53:00 by qfremeau          #+#    #+#              #
-#    Updated: 2016/02/12 12:29:57 by qfremeau         ###   ########.fr        #
+#    Created: 2016/08/02 11:44:08 by qfremeau          #+#    #+#              #
+#    Updated: 2016/10/19 18:09:50 by qfremeau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# DEPENDENCIES
+# Compilation
+CC =		clang
+CFLAGS =	-Wall -Wextra -Werror
+ADDFLAGS =	
 
-# **************************************************************************** #
+# Default rule
+DEFRULE =	all
 
-NAME = libft.a
+# Binary
+NAME =		libft.a
+DST =		
 
-# COMPILATION
-CC = clang
-CCFLAGS = -Wall -Werror -Wextra
+# Directories
+SRCDIR =	srcs
+OBJDIR =	objs
+INCDIR =	includes
+LIBDIR =	
 
-# DIRECTORIES
-SRCDIR = src
-OBJDIR = obj
-INCDIR = include
-
-# SOURCES
+# Sources
 SRC =\
 	basics/memory/ft_bzero.c\
 	basics/memory/ft_memalloc.c\
@@ -45,6 +48,7 @@ SRC =\
 	basics/print/ft_putnbr_fd.c\
 	basics/print/ft_putstr.c\
 	basics/print/ft_putstr_fd.c\
+	basics/print/ft_putnl.c\
 	\
 	basics/string/ft_strcat.c\
 	basics/string/ft_strchr.c\
@@ -83,11 +87,6 @@ SRC =\
 	basics/types/ft_toupper.c\
 	basics/types/ft_uporlow.c\
 	\
-	containers/array/ft_free_2darray.c\
-	containers/array/ft_free_array.c\
-	containers/array/ft_malloc_2darray.c\
-	containers/array/ft_malloc_array.c\
-	\
 	containers/list/ft_lstadd.c\
 	containers/list/ft_lstdel.c\
 	containers/list/ft_lstdelone.c\
@@ -95,23 +94,58 @@ SRC =\
 	containers/list/ft_lstmap.c\
 	containers/list/ft_lstnew.c\
 	\
-	containers/circlst/ft_circlst_add.c\
-	containers/circlst/ft_circlst_create.c\
-	containers/circlst/ft_circlst_del.c\
-	containers/circlst/ft_circlst_delone.c\
-	\
 	utils/cast/ft_atoi.c\
 	utils/cast/ft_itoa.c\
 	\
 	utils/math/ft_sqrt.c\
-	utils/math/ft_swap.c
+	utils/math/ft_swap.c\
+	\
+	wide/ft_nbrlen.c\
+	wide/ft_strlen_w.c\
+	wide/ft_putnbrlong.c\
+	wide/ft_itoa_w.c\
+	\
+	printf/ft_addto.c\
+	printf/ft_printf.c\
+	printf/ft_options.c\
+	printf/ft_setoptions.c\
+	printf/ft_apply.c\
+	printf/ft_getparams.c\
+	printf/option_c.c\
+	printf/option_di.c\
+	printf/option_p.c\
+	printf/option_u.c\
+	printf/option_s.c\
+	printf/option_o.c\
+	printf/option_b.c\
+	printf/option_uni.c\
+	printf/option_hexa.c\
+	printf/option_mod.c\
+	printf/ft_strnchr.c\
+	printf/ft_sitoa.c\
+	printf/ft_maths.c\
+	printf/ft_nbrlen.c\
+	\
+	gnl/get_next_line.c
+
+LIB =		
+OBJ =		$(SRC:.c=.o)
+
+# Prefixes
+LLIBP =		$(addprefix -l, $(LIB))
+LIBP =		$(addprefix lib, $(LIB))
+OBJP =		$(addprefix $(OBJDIR)/, $(SRC:.c=.o))
+OBJS_DIRS = $(sort $(dir $(OBJP)))
 
 # **************************************************************************** #
-
 # SPECIAL CHARS
+
 LOG_CLEAR		= \033[2K
-LOG_UP 			= \033[A
+LOG_UP			= \033[A
 LOG_NOCOLOR		= \033[0m
+LOG_BOLD		= \033[1m
+LOG_UNDERLINE	= \033[4m
+LOG_BLINKING	= \033[5m
 LOG_BLACK		= \033[1;30m
 LOG_RED			= \033[1;31m
 LOG_GREEN		= \033[1;32m
@@ -122,38 +156,45 @@ LOG_CYAN		= \033[1;36m
 LOG_WHITE		= \033[1;37m
 
 # **************************************************************************** #
+# RULES
 
-.PHONY: all $(NAME) build clean fclean re
-.SILENT:
+.PHONY: glu dev
 
-SRCS = $(addprefix $(SRCDIR)/, $(SRC))
-OBJS = $(addprefix $(OBJDIR)/, $(addsuffix .o, $(basename $(SRC))))
-OBJS_DIRS = $(sort $(dir $(OBJS)))
+# Main rules
+default:
+	@echo -e "$(LOG_BOLD)Default execution: rule $(DEFRULE)$(LOG_NOCOLOR)"
+	@make $(DEFRULE)
+	@echo -e "$(LOG_BOLD)Execution finished     $(LOG_NOCOLOR)ヽ(ヅ)ノ"
+	
 
-INCS_DIRS = $(addsuffix /, $(INCDIR))
-INCS = $(addprefix -I , $(INCS_DIRS))
+glu: re
+	@make clean
 
 all: $(NAME)
 
-$(NAME): build $(LIBS) $(OBJS)
-	echo -e "$(LOG_CLEAR)$(NAME)... $(LOG_YELLOW)assembling...$(LOG_NOCOLOR)$(LOG_UP)"
-	ar rc $(NAME) $(OBJS)
-	ranlib $(NAME)
-	echo -e "$(LOG_CLEAR)$(NAME)... compiled $(LOG_GREEN)✓$(LOG_NOCOLOR)"
-
-build:
-	mkdir -p $(OBJDIR)
-	mkdir -p $(OBJS_DIRS)
-
-clean:
-	rm -f $(LIBS)
-	rm -f $(OBJS)
-
-fclean: clean
-	rm -f $(NAME)
-
 re: fclean all
 
+# Compilation rules
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	echo -e "$(LOG_CLEAR)$(NAME)... $(LOG_YELLOW)$<$(LOG_NOCOLOR)$(LOG_UP)"
-	$(CC) -c -o $@ $< $(INCS) $(CCFLAGS)
+	@echo -e "--$(LOG_CLEAR)$(LOG_VIOLET)$(NAME)$(LOG_NOCOLOR).................... $(LOG_YELLOW)$<$(LOG_NOCOLOR)$(LOG_UP)"
+	@$(CC) $(CFLAGS) -c -o $@ $^ -I$(INCDIR)
+
+$(OBJDIR):
+	@echo -e "$(LOG_CLEAR)$(LOG_BLUE)build $(NAME)$(LOG_NOCOLOR)"
+	@mkdir -p $(OBJDIR)
+	@mkdir -p $(OBJS_DIRS)
+
+$(NAME): $(OBJDIR) $(OBJP)
+	@echo -e "--$(LOG_CLEAR)$(LOG_VIOLET)$(NAME)$(LOG_NOCOLOR)..................... $(LOG_YELLOW)assembling$(LOG_NOCOLOR)$(LOG_UP)"
+	@ar rc $(DST)$(NAME) $(OBJP)
+	@ranlib $(DST)$(NAME)
+	@echo -e "--$(LOG_CLEAR)$(LOG_VIOLET)$(NAME)$(LOG_NOCOLOR) compiled........... $(LOG_GREEN)✓$(LOG_NOCOLOR)"
+
+# MrProper's legacy
+clean:
+	@echo -e "--$(LOG_CLEAR)$(LOG_YELLOW)Objects$(LOG_NOCOLOR) deletion............. $(LOG_RED)×$(LOG_NOCOLOR)"
+	@rm -rf $(OBJDIR)
+
+fclean: clean
+	@echo -e "--$(LOG_CLEAR)$(LOG_YELLOW)Binary$(LOG_NOCOLOR) deletion.............. $(LOG_RED)×$(LOG_NOCOLOR)"
+	@rm -f $(NAME)
