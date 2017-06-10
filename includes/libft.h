@@ -6,7 +6,7 @@
 /*   By: qfremeau <qfremeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/10 15:03:03 by qfremeau          #+#    #+#             */
-/*   Updated: 2016/11/02 14:44:47 by qfremeau         ###   ########.fr       */
+/*   Updated: 2016/11/24 00:58:24 by qfremeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <fcntl.h>
 # include <stddef.h>
 # include <wchar.h>
+# include <stdint.h>
 
 void			ft_bzero(void *src, size_t len);
 void			ft_memdel(void **a_ptr);
@@ -29,6 +30,7 @@ void			*ft_memcpy(void *dst, const void *src, size_t len);
 void			*ft_memccpy(void *dst, const void *src, int endchr, size_t len);
 void			*ft_memchr(const void *src, int c, size_t len);
 void			*ft_memalloc(size_t size);
+void			*ft_realloc(void *ptr, size_t size);
 
 int				ft_memcmp(const void *s1, const void *s2, size_t len);
 
@@ -101,9 +103,10 @@ t_list			*ft_lstnew(void const *content, size_t content_size);
 t_list			*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 
 long			ft_atoi(const char *str);
+double			ft_atof(const char *str);
 void			ft_swap(int *a, int *b);
-float			ft_sqrt(float x);
-float			ft_invsqrt(float x);
+double			ft_sqrt(double x);
+double			ft_invsqrt(double x);
 
 size_t			ft_strlen_w(wchar_t *str);
 void			ft_putnbrlong(long long int nb);

@@ -6,14 +6,14 @@
 #    By: qfremeau <qfremeau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/08/02 11:44:08 by qfremeau          #+#    #+#              #
-#    Updated: 2016/10/19 18:09:50 by qfremeau         ###   ########.fr        #
+#    Updated: 2017/02/21 18:53:06 by qfremeau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Compilation
 CC =		clang
 CFLAGS =	-Wall -Wextra -Werror
-ADDFLAGS =	
+ADDFLAGS =
 
 # Default rule
 DEFRULE =	all
@@ -39,6 +39,7 @@ SRC =\
 	basics/memory/ft_memdel.c\
 	basics/memory/ft_memmove.c\
 	basics/memory/ft_memset.c\
+	basics/memory/ft_realloc.c\
 	\
 	basics/print/ft_putchar.c\
 	basics/print/ft_putchar_fd.c\
@@ -95,6 +96,7 @@ SRC =\
 	containers/list/ft_lstnew.c\
 	\
 	utils/cast/ft_atoi.c\
+	utils/cast/ft_atof.c\
 	utils/cast/ft_itoa.c\
 	\
 	utils/math/ft_sqrt.c\
@@ -176,7 +178,7 @@ re: fclean all
 
 # Compilation rules
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	@echo -e "--$(LOG_CLEAR)$(LOG_VIOLET)$(NAME)$(LOG_NOCOLOR).................... $(LOG_YELLOW)$<$(LOG_NOCOLOR)$(LOG_UP)"
+	@echo -e "--$(LOG_CLEAR)$(LOG_VIOLET)$(NAME)$(LOG_NOCOLOR)...................... $(LOG_YELLOW)$<$(LOG_NOCOLOR)$(LOG_UP)"
 	@$(CC) $(CFLAGS) -c -o $@ $^ -I$(INCDIR)
 
 $(OBJDIR):
@@ -188,7 +190,7 @@ $(NAME): $(OBJDIR) $(OBJP)
 	@echo -e "--$(LOG_CLEAR)$(LOG_VIOLET)$(NAME)$(LOG_NOCOLOR)..................... $(LOG_YELLOW)assembling$(LOG_NOCOLOR)$(LOG_UP)"
 	@ar rc $(DST)$(NAME) $(OBJP)
 	@ranlib $(DST)$(NAME)
-	@echo -e "--$(LOG_CLEAR)$(LOG_VIOLET)$(NAME)$(LOG_NOCOLOR) compiled........... $(LOG_GREEN)✓$(LOG_NOCOLOR)"
+	@echo -e "--$(LOG_CLEAR)$(LOG_VIOLET)$(NAME)$(LOG_NOCOLOR) compiled............. $(LOG_GREEN)✓$(LOG_NOCOLOR)"
 
 # MrProper's legacy
 clean:
